@@ -1,0 +1,22 @@
+# roles/yum_cron/tasks/main.yml
+---
+- name: install yum-cron
+  yum:
+    name: yum-cron
+    state: present
+
+- name: set yum-cron to only check and download, not install
+  lineinfile:
+    dest: /etc/sysconfig/yum-cron
+    regexp: '^#?{{ item }}'
+    line: '{{ item }}=yes'
+  with_items:
+    - CHECK_ONLY
+    - CHECK_FIRST
+    - DOWNLOAD_ONLY
+
+- name: make sure yum-cron service is enabled and running
+  service:
+    name: yum-cron
+    state: running
+    enabled: yes
