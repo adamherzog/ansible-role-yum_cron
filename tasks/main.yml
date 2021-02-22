@@ -5,22 +5,6 @@
     name: yum-cron
     state: present
 
-- name: set yum-cron to only check and download, not install
-  lineinfile:
-    dest: /etc/sysconfig/yum-cron
-    regexp: '^#?{{ item }}'
-    line: '{{ item }}=yes'
-  with_items:
-    - CHECK_ONLY
-    - CHECK_FIRST
-    - DOWNLOAD_ONLY
-
-- name: set yum-cron random delay to 1 minute (since it's already random-delayed by anacron)
-  lineinfile:
-    dest: /etc/sysconfig/yum-cron
-    regexp: '^#?RANDOMWAIT='
-    line: RANDOMWAIT="1"
-
 - name: make sure yum-cron service is enabled and running
   service:
     name: yum-cron
